@@ -34,6 +34,13 @@ Binds `<form>` to CSS classes used for validation
 	- `value="string"` - internal value for the option
 	- `<lr:form-label>` - label to display for the option
 
+## `form-select`
+
+- `name="string"` - internal name of form field
+- `required="required"` - whether element is required
+- `<lr:form-label>` - label to display for the group, default none
+- `<option>` - options to add to the select
+
 ## `form-text`
 
 An HTML text input

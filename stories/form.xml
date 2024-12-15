@@ -51,6 +51,16 @@
 				</lr:form-label>
 			</lr:form-checkbox>
 
+			<lr:form-select name="country" required="required">
+				<lr:form-label style="margin-top: 0.5em">
+					Country
+				</lr:form-label>
+				<option value="">(choose an option)</option>
+				<option value="AU">Australia</option>
+				<option value="GB">UK</option>
+				<option value="US">US</option>
+			</lr:form-select>
+
 			<lr:form-radio-group name="radio" required="required">
 				<lr:form-label style="margin-top: 0.5em">
 					Favourite fruit

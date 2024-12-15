@@ -108,6 +108,24 @@ form.lr--form {
 		}
 	}
 
+	/* Select */
+	& .lr--form--select {
+		/* Render each part in turn, vertically */
+		display: flex;
+		flex-direction: column;
+
+		/* If choice is required, mark with a star */
+		&:has(select[required]) > label:after {
+			color: var(--lr--secondary);
+			content: var(--lr--form--required-flag);
+		}
+
+		/* If choice is required and nothing is selected, make the star red */
+		&:has(select[required]:invalid) > label:after {
+			color: var(--lr--error);
+		}
+	}
+
 	/* Radio */
 	& .lr--form--radio-group {
 		/* Render each part in turn, vertically */
@@ -134,7 +152,6 @@ form.lr--form {
 		/* If choice is required and nothing is selected, make the star red */
 		&.lr--form--radio-group--required:has(input[type=radio]:invalid) .lr--form--radio-group--label::after {
 			color: var(--lr--error);
-			content: var(--lr--form--required-flag);
 		}
 	}
 }
@@ -228,6 +245,24 @@ form.lr--form {
 			<xsl:attribute name="for"><xsl:value-of select="@name" /></xsl:attribute>
 			<xsl:apply-templates select="./lr:form-label/node()" />
 		</label>
+	</div>
+</xsl:template>
+
+<xsl:template match="lr:form-select">
+	<div class="lr--form--select">
+		<xsl:if test="./lr:form-label">
+			<label>
+				<xsl:attribute name="for"><xsl:value-of select="@name" /></xsl:attribute>
+				<xsl:apply-templates select="./lr:form-label/@*" />
+				<xsl:apply-templates select="./lr:form-label/node()" />
+			</label>
+		</xsl:if>
+
+		<select>
+			<xsl:attribute name="id"><xsl:value-of select="@name" /></xsl:attribute>
+			<xsl:apply-templates select="@*" />
+			<xsl:apply-templates select="html:option" />
+		</select>
 	</div>
 </xsl:template>
 
