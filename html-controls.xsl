@@ -17,48 +17,75 @@
 		<style type="text/css">
 <![CDATA[
 :root {
+	--lr-border-radius: 0.5em;
 	--lr--error: red;
 	--lr--secondary: grey;
 }
 
 .lr--button {
-	border-radius: 0.5em;
+	border-radius: var(--lr-border-radius);
 	padding: 0.5em 1em;
 }
 
-.lr--text-input {
+div.lr--accordion {
+	/* Expansion below the heading */
 	display: flex;
-	flex-direction: column;
+	flex-direction: column ;
+
+	/* Hide expansion by default */
+	& .lr--accordion--closed { display: inline-block; }
+	& .lr--accordion--open { display: none; }
 
 	& > label {
-		margin-bottom: 0.5em;
-		&:has(+ input[required])::after {
-			content: "*";
-			color: var(--lr--secondary);
-			margin-left: 0.5em;
-		}
+		/* Let user know they can click this */
+		cursor: grab;
 
-		&:has(+ input[required]:placeholder-shown)::after {
-			color: var(--lr--error);
-		}
+		/* Ensure checkbox is hidden */
+		& > input[type=checkbox] { visibility: hidden; width: 0; height: 0; position: fixed; left: -100px; }
 	}
-	
 
-	& > input[type=text] {
-		border-radius: 0.5em;
-		padding: 0.5em 1em;
-		width: 100%;
-
-		&:invalid:not(:placeholder-shown) {
-			border-color: var(--lr--error);
-			& + .lr--form--error { display: inherit; }
-		}
+	/* Changes when expanded */
+	&:has(> label > input[type=checkbox]:checked) {
+		/* Set up the bit(s) that change on expansion */
+		& .lr--accordion--closed { display: none; }
+		& .lr--accordion--open { display: inline-block; }
 	}
 }
 
 form.lr--form {
+
+	& .lr--text-input {
+		display: flex;
+		flex-direction: column;
+
+		& > label {
+			margin-bottom: 0.5em;
+			&:has(+ input[required])::after {
+				content: "*";
+				color: var(--lr--secondary);
+				margin-left: 0.5em;
+			}
+
+			&:has(+ input[required]:placeholder-shown)::after {
+				color: var(--lr--error);
+			}
+		}
+	
+
+		& > input[type=text] {
+			border-radius: var(--lr-border-radius);
+			padding: 0.5em 1em;
+			width: 100%;
+
+			&:invalid:not(:placeholder-shown) {
+				border-color: var(--lr--error);
+				& + .lr--form--error { display: inherit; }
+			}
+		}
+	}
+
 	&:invalid {
-		& > input[type=submit] {
+		& > input[type=submit].lr--button {
 			border-color: var(--lr--error);
 			pointer-events: none;
 			cursor: not-allowed;
@@ -89,10 +116,10 @@ form.lr--form {
 
 <xsl:template match="lr:form-text">
 	<div class="lr--text-input">
-		<xsl:if test="./lr:label">
+		<xsl:if test="./lr:form-label">
 			<label>
 				<xsl:attribute name="for"><xsl:value-of select="generate-id(.)" /></xsl:attribute>
-				<xsl:apply-templates select="./lr:label" />
+				<xsl:apply-templates select="./lr:form-label" />
 			</label>
 		</xsl:if>
 
@@ -107,7 +134,7 @@ form.lr--form {
 
 		<div class="lr--form--error">
 			<xsl:choose>
-				<xsl:when test="./lr:error-message"><xsl:apply-templates select="./lr:error-message" /></xsl:when>
+				<xsl:when test="./lr:form-error-message"><xsl:apply-templates select="./lr:form-error-message" /></xsl:when>
 				<xsl:otherwise>Value is invalid</xsl:otherwise>
 			</xsl:choose>
 		</div>
@@ -118,6 +145,35 @@ form.lr--form {
 	<input type="submit" class="lr--button">
 		<xsl:apply-templates select="@*" />
 	</input>
+</xsl:template>
+
+<xsl:template match="lr:accordion">
+	<div class="lr--accordion">
+		<xsl:apply-templates select="@*" />
+		<xsl:apply-templates />
+	</div>
+</xsl:template>
+
+<xsl:template match="lr:accordion-label">
+	<label>
+		<xsl:apply-templates select="@*" />
+        <input type="checkbox" />
+		<xsl:apply-templates />
+	</label>
+</xsl:template>
+
+<xsl:template match="lr:accordion-open">
+	<div class="lr--accordion--open">
+		<xsl:apply-templates select="@*" />
+		<xsl:apply-templates />
+	</div>
+</xsl:template>
+
+<xsl:template match="lr:accordion-closed">
+	<div class="lr--accordion--closed">
+		<xsl:apply-templates select="@*" />
+		<xsl:apply-templates />
+	</div>
 </xsl:template>
 
 <xsl:template match="html:*">

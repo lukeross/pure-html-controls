@@ -8,6 +8,14 @@ You will need
 
 There are examples in the `stories/` directory; use `make` to build them.
 
+## `accordion`
+
+An expand/contract section
+
+- `<lr:accordion-label>` - the portion to always display. Can contain other tags
+- `<lr:accordion-open>` - inline block to display when the accordion is open
+- `<lr:accordion-closed>` - inline block to display when the accordion is closed
+
 ## `form`
 
 Binds `<form>` to CSS classes used for validation

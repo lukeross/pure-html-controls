@@ -1,0 +1,26 @@
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:lr="https://lukeross.uk/xml/html-controls"
+>
+
+<head>
+<title>Stories: Accordion</title>
+</head>
+
+<body>
+
+<lr:accordion>
+	<lr:accordion-label>
+		<lr:accordion-closed>&gt;</lr:accordion-closed>
+		<lr:accordion-open style="rotate: 90deg">&gt;</lr:accordion-open>
+		Click me!
+	</lr:accordion-label>
+
+	<lr:accordion-open>
+		You found me!
+	</lr:accordion-open>
+</lr:accordion>
+
+</body>
+
+</html>

@@ -16,8 +16,8 @@
 				pattern="\s*\S.*"
 				placeholder="Your name"
 			>
-				<lr:label>Enter your name</lr:label>
-				<lr:error-message>Value must contain non-space characters.</lr:error-message>
+				<lr:form-label>Enter your name</lr:form-label>
+				<lr:form-error-message>Value must contain non-space characters.</lr:form-error-message>
 			</lr:form-text>
 
 			<lr:form-submit value="Submit" />

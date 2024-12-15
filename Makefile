@@ -1,5 +1,5 @@
-all: stories/form.html
+all: stories/accordion.html stories/form.html
 	echo "Build complete"
 
-%.html: %.xml
+%.html: %.xml html-controls.xsl
 	xsltproc -o $@ html-controls.xsl $<
