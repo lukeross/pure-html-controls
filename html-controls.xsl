@@ -17,6 +17,7 @@
 		<style type="text/css">
 <![CDATA[
 :root {
+	--lr--form--required-flag: "*"; /* How required fields are marked */
 	--lr--error: red; /* Used for error states */
 	--lr--secondary: grey; /* Used for UI hints */
 }
@@ -69,7 +70,7 @@ form.lr--form {
 		& > label {
 			/* If field is required mark it with a secondary star */
 			&:has(+ input[required])::after {
-				content: "*";
+				content: var(--lr--form--required-flag);
 				color: var(--lr--secondary);
 				margin-left: 0.5em;
 			}
@@ -92,6 +93,48 @@ form.lr--form {
 				border-color: var(--lr--error);
 				& + .lr--form--error { display: inherit; }
 			}
+		}
+	}
+
+	/* Checkboxen */
+	& .lr--form--checkbox {
+		/* Render each part in turn, horizontally, label flexes */
+		display: flex;
+		flex-direction: row;
+
+		& > label {
+			flex-grow: 1;
+			flex-shrink: 1
+		}
+	}
+
+	/* Radio */
+	& .lr--form--radio-group {
+		/* Render each part in turn, vertically */
+		display: flex;
+		flex-direction: column;
+
+		& > .lr--form--radio {
+			/* Render each part in turn, horizontally, label flexes */
+			display: flex;
+			flex-direction: row;
+
+			& > label {
+				flex-grow: 1;
+				flex-shrink: 1
+			}
+		}
+
+		/* If choice is required, mark with a star */
+		&.lr--form--radio-group--required .lr--form--radio-group--label::after {
+			color: var(--lr--secondary);
+			content: var(--lr--form--required-flag);
+		}
+
+		/* If choice is required and nothing is selected, make the star red */
+		&.lr--form--radio-group--required:has(input[type=radio]:invalid) .lr--form--radio-group--label::after {
+			color: var(--lr--error);
+			content: var(--lr--form--required-flag);
 		}
 	}
 }
@@ -145,23 +188,23 @@ form.lr--form {
 	<div class="lr--text-input">
 		<xsl:if test="./lr:form-label">
 			<label>
-				<xsl:attribute name="for"><xsl:value-of select="generate-id(.)" /></xsl:attribute>
-				<xsl:apply-templates select="./lr:form-label" />
+				<xsl:attribute name="for"><xsl:value-of select="@name" /></xsl:attribute>
+				<xsl:apply-templates select="./lr:form-label/node()" />
 			</label>
 		</xsl:if>
 
 		<input>
-			<xsl:attribute name="id"><xsl:value-of select="generate-id(.)" /></xsl:attribute>
+			<xsl:apply-templates select="@*" />
+			<xsl:attribute name="id"><xsl:value-of select="@name" /></xsl:attribute>
 			<xsl:attribute name="type"><xsl:choose>
 				<xsl:when test="@type"><xsl:value-of select="@type" /></xsl:when>
 				<xsl:otherwise>text</xsl:otherwise>
 			</xsl:choose></xsl:attribute>
-			<xsl:apply-templates select="@*" />
 		</input>
 
 		<div class="lr--form--error">
 			<xsl:choose>
-				<xsl:when test="./lr:form-error-message"><xsl:apply-templates select="./lr:form-error-message" /></xsl:when>
+				<xsl:when test="./lr:form-error-message"><xsl:apply-templates select="./lr:form-error-message/node()" /></xsl:when>
 				<xsl:otherwise>Value is invalid</xsl:otherwise>
 			</xsl:choose>
 		</div>
@@ -173,6 +216,50 @@ form.lr--form {
 		<xsl:apply-templates select="@*" />
 		<xsl:attribute name="class"><xsl:value-of select="concat('lr--form--submit ', @class)" /></xsl:attribute>
 	</input>
+</xsl:template>
+
+<xsl:template match="lr:form-checkbox">
+	<div class="lr--form--checkbox">
+		<input type="checkbox">
+			<xsl:attribute name="id"><xsl:value-of select="@name" /></xsl:attribute>
+			<xsl:apply-templates select="@*" />
+		</input>
+		<label>
+			<xsl:attribute name="for"><xsl:value-of select="@name" /></xsl:attribute>
+			<xsl:apply-templates select="./lr:form-label/node()" />
+		</label>
+	</div>
+</xsl:template>
+
+<xsl:template match="lr:form-radio-group">
+	<div>
+		<xsl:attribute name="class"><xsl:choose>
+			<xsl:when test="@required">lr--form--radio-group lr--form--radio-group--required</xsl:when>
+			<xsl:otherwise>lr--form--radio-group</xsl:otherwise>
+		</xsl:choose></xsl:attribute>
+
+		<div class="lr--form--radio-group--label">
+			<xsl:apply-templates select="./lr:form-label/@*" />
+			<xsl:apply-templates select="./lr:form-label/node()" />
+		</div>
+
+		<xsl:for-each select="./lr:radio">
+			<div class="lr--form--radio">
+				<input type="radio">
+					<xsl:attribute name="id"><xsl:value-of select="generate-id(.)" />-</xsl:attribute>
+					<xsl:attribute name="name"><xsl:value-of select="../@name" /></xsl:attribute>
+					<xsl:if test="../@required"><xsl:attribute name="required">required</xsl:attribute></xsl:if>
+					<xsl:apply-templates select="@*" />
+				</input>
+
+				<label>
+					<xsl:attribute name="for"><xsl:value-of select="generate-id(.)" />-</xsl:attribute>
+					<xsl:apply-templates select="./lr:form-label/@*" />
+					<xsl:apply-templates select="./lr:form-label/node()" />
+				</label>
+			</div>
+		</xsl:for-each>
+	</div>
 </xsl:template>
 
 <xsl:template match="lr:accordion">

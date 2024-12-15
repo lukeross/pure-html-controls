@@ -19,6 +19,7 @@
 		<lr:form>
 
 			<lr:form-text
+				name="name"
 				required="required"
 				pattern="\s*\S.*"
 				placeholder="eg. John Smith"
@@ -33,6 +34,7 @@
 			</lr:form-text>
 
 			<lr:form-text
+				name="dob"
 				required="required"
 				type="date"
 				placeholder="eg. 01 Jan 2000"
@@ -42,6 +44,24 @@
 					Enter your date of birth
 				</lr:form-label>
 			</lr:form-text>
+
+			<lr:form-checkbox name="checkbox">
+				<lr:form-label>
+					Check box
+				</lr:form-label>
+			</lr:form-checkbox>
+
+			<lr:form-radio-group name="radio" required="required">
+				<lr:form-label style="margin-top: 0.5em">
+					Favourite fruit
+				</lr:form-label>
+				<lr:radio value="apples">
+					<lr:form-label style="color: green">Apples</lr:form-label>
+				</lr:radio>
+				<lr:radio value="oranges">
+					<lr:form-label style="color: orange">Oranges</lr:form-label>
+				</lr:radio>
+			</lr:form-radio-group>
 
 			<lr:form-submit value="Submit" class="with-padding" />
 
