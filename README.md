@@ -1,6 +1,12 @@
 # Pure HTML Controls
 
-Experimental widget/control set using pure HTML and CSS
+Experimental widget/control set using pure HTML and CSS.
+
+You will need
+
+- [xsltproc](https://gitlab.gnome.org/GNOME/libxslt/-/wikis/home)
+
+There are examples in the `stories/` directory; use `make` to build them.
 
 ## `form`
 
