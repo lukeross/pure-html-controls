@@ -20,10 +20,25 @@ An expand/contract section
 
 Binds `<form>` to CSS classes used for validation
 
+## `form-checkbox`
+
+- `name="string"` - internal name of form field
+- `<lr:form-label>` - label to display
+
+## `form-radio-group`
+
+- `name="string"` - internal name of form field
+- `required="required"` - whether element is required
+- `<lr:form-label>` - label to display for the group, default none
+- `<lr:form-radio>` - each radio option
+	- `value="string"` - internal value for the option
+	- `<lr:form-label>` - label to display for the option
+
 ## `form-text`
 
 An HTML text input
 
+- `name="string"` - internal name of form field
 - `type="text|date|..."` - input variation to use
 - `placeholder="text"` - placeholder text to use
 - `pattern="regexp"` - validation pattern to

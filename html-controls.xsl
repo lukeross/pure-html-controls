@@ -238,10 +238,12 @@ form.lr--form {
 			<xsl:otherwise>lr--form--radio-group</xsl:otherwise>
 		</xsl:choose></xsl:attribute>
 
-		<div class="lr--form--radio-group--label">
-			<xsl:apply-templates select="./lr:form-label/@*" />
-			<xsl:apply-templates select="./lr:form-label/node()" />
-		</div>
+		<xsl:if test="./lr:form-label">
+			<div class="lr--form--radio-group--label">
+				<xsl:apply-templates select="./lr:form-label/@*" />
+				<xsl:apply-templates select="./lr:form-label/node()" />
+			</div>
+		</xsl:if>
 
 		<xsl:for-each select="./lr:radio">
 			<div class="lr--form--radio">
