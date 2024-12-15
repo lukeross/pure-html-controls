@@ -1,0 +1,28 @@
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:lr="https://lukeross.uk/xml/html-controls"
+>
+
+	<head>
+		<title>Stories: Form</title>
+	</head>
+
+	<body>
+
+		<lr:form>
+
+			<lr:form-text
+				required="required"
+				pattern="\s*\S.*"
+				placeholder="Your name"
+			>
+				<lr:label>Enter your name</lr:label>
+				<lr:error-message>Value must contain non-space characters.</lr:error-message>
+			</lr:form-text>
+
+			<lr:form-submit value="Submit" />
+
+		</lr:form>
+
+	</body>
+</html>
