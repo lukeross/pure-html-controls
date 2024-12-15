@@ -27,8 +27,8 @@ An HTML text input
 - `placeholder="text"` - placeholder text to use
 - `pattern="regexp"` - validation pattern to
 - `required="required"` - whether element is required
-- `<lr:label>` - label to display, default none
-- `<lr:error-message>` - error to display when validation fails
+- `<lr:form-label>` - label to display, default none
+- `<lr:form-error-message>` - error to display when validation fails
 
 ## `form-submit`
 
