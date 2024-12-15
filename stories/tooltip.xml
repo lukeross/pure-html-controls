@@ -1,0 +1,35 @@
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:lr="https://lukeross.uk/xml/html-controls"
+>
+
+<head>
+<title>Stories: Tooltip</title>
+<style type="text/css">
+.tip {
+	border: solid thin black;
+	border-radius: 0.5em;
+	background: gray;
+	padding: 0.5em;
+}
+</style>
+</head>
+
+<body>
+
+<lr:tooltip-wrapper>
+	<lr:tooltip class="tip" position="under">
+		This is the tip
+	</lr:tooltip>
+	Hover over me!
+</lr:tooltip-wrapper>
+
+<lr:tooltip-wrapper style="margin-top: 10em">
+	<lr:tooltip class="tip" position="over">
+		This is the tip
+	</lr:tooltip>
+	Activate me!
+</lr:tooltip-wrapper>
+
+</body>
+</html>

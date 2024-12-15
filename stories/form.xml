@@ -5,6 +5,13 @@
 
 	<head>
 		<title>Stories: Form</title>
+		<style type="text/css">
+.with-padding {
+	border-radius: 0.5em;
+	margin: 1em 0;
+	padding: 0.5em 1em;
+}
+		</style>
 	</head>
 
 	<body>
@@ -14,13 +21,29 @@
 			<lr:form-text
 				required="required"
 				pattern="\s*\S.*"
-				placeholder="Your name"
+				placeholder="eg. John Smith"
+				class="with-padding"
 			>
-				<lr:form-label>Enter your name</lr:form-label>
-				<lr:form-error-message>Value must contain non-space characters.</lr:form-error-message>
+				<lr:form-label style="margin-bottom: 0.5em">
+					Enter your name
+				</lr:form-label>
+				<lr:form-error-message style="margin-top: 0.25em">
+					Value must contain non-space characters.
+				</lr:form-error-message>
 			</lr:form-text>
 
-			<lr:form-submit value="Submit" />
+			<lr:form-text
+				required="required"
+				type="date"
+				placeholder="eg. 01 Jan 2000"
+				class="with-padding"
+			>
+				<lr:form-label style="margin-bottom: 0.5em">
+					Enter your date of birth
+				</lr:form-label>
+			</lr:form-text>
+
+			<lr:form-submit value="Submit" class="with-padding" />
 
 		</lr:form>
 

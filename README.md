@@ -24,6 +24,7 @@ Binds `<form>` to CSS classes used for validation
 
 An HTML text input
 
+- `type="text|date|..."` - input variation to use
 - `placeholder="text"` - placeholder text to use
 - `pattern="regexp"` - validation pattern to
 - `required="required"` - whether element is required
@@ -33,3 +34,10 @@ An HTML text input
 ## `form-submit`
 
 A submit button, which disables itself until the form is valid
+
+## `tooltip-wrapper`
+
+An on-hover tooltip
+
+- `position="over|under"` - where to provide the tooltip, relative to container
+- `<lr:tooltip>` - the tooltip contents to show on over

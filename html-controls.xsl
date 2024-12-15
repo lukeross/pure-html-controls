@@ -17,14 +17,8 @@
 		<style type="text/css">
 <![CDATA[
 :root {
-	--lr-border-radius: 0.5em;
-	--lr--error: red;
-	--lr--secondary: grey;
-}
-
-.lr--button {
-	border-radius: var(--lr-border-radius);
-	padding: 0.5em 1em;
+	--lr--error: red; /* Used for error states */
+	--lr--secondary: grey; /* Used for UI hints */
 }
 
 div.lr--accordion {
@@ -53,52 +47,84 @@ div.lr--accordion {
 }
 
 form.lr--form {
+	/* Error messages are hidden until needed */
+	& .lr--form--error {
+		color: var(--lr--error);
+		display: none;
+	}
 
+	/* Submit buttons are unclickable until valid */
+	&:invalid > input[type=submit].lr--form--submit {
+		border-color: var(--lr--error);
+		pointer-events: none;
+		cursor: not-allowed;
+	}
+
+	/* Text fields */
 	& .lr--text-input {
+		/* Render each part in turn, vertically */
 		display: flex;
 		flex-direction: column;
 
 		& > label {
-			margin-bottom: 0.5em;
+			/* If field is required mark it with a secondary star */
 			&:has(+ input[required])::after {
 				content: "*";
 				color: var(--lr--secondary);
 				margin-left: 0.5em;
 			}
 
+			/* When required text field is not yet set mark it with an error star */
 			&:has(+ input[required]:placeholder-shown)::after {
 				color: var(--lr--error);
+			}
+
+			/* Required non-text fields show no placeholder so base it on validity */
+			&:has(+ input[required]:not([type=text]):invalid)::after {
+				color: red;
 			}
 		}
 	
 
+		/* When input is invalid highlight the border colour and show error message */
 		& > input[type=text] {
-			border-radius: var(--lr-border-radius);
-			padding: 0.5em 1em;
-			width: 100%;
-
 			&:invalid:not(:placeholder-shown) {
 				border-color: var(--lr--error);
 				& + .lr--form--error { display: inherit; }
 			}
 		}
 	}
+}
 
-	&:invalid {
-		& > input[type=submit].lr--button {
-			border-color: var(--lr--error);
-			pointer-events: none;
-			cursor: not-allowed;
-		}
-	}
+.lr--tooltip {
+	/* Set up a context for the tooltip */
+    position: relative;
 
-	& > * { margin: 1em 0; }
+	/* Tooltips are hidden by default */
+    & > .lr--tooltip--content {
+        display: none;
+        z-index: 10;
+    }
 
-	& .lr--form--error {
-		margin-top: 0.5em;
-		color: var(--lr--error);
-		display: none;
-	}
+	/* Render on hover */
+    &:hover > .lr--tooltip--content {
+        position: absolute;
+        display: block;
+
+		/* Select the correct position */
+        &.lr--tooltip--over { bottom: 100% }
+        &.lr--tooltip--under { top: 100%; }
+    }
+
+	/* Render on active, for touch screens etc */
+    &:active > .lr--tooltip--content.lr--tooltip--under {
+        position: absolute;
+        display: block;
+
+		/* Select the correct position */
+        &.lr--tooltip--over { bottom: 100% }
+        &.lr--tooltip--under { top: 100%; }
+    }
 }
 ]]>
 		</style>
@@ -108,8 +134,9 @@ form.lr--form {
 </xsl:template>
 
 <xsl:template match="lr:form">
-	<form class="lr--form">
+	<form>
 		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:value-of select="concat('lr--form ', @class)" /></xsl:attribute>
 		<xsl:apply-templates />
 	</form>
 </xsl:template>
@@ -123,13 +150,13 @@ form.lr--form {
 			</label>
 		</xsl:if>
 
-		<input
-			type="text"
-		>
+		<input>
 			<xsl:attribute name="id"><xsl:value-of select="generate-id(.)" /></xsl:attribute>
-			<xsl:if test="@required"><xsl:attribute name="required">required</xsl:attribute></xsl:if>
-			<xsl:if test="@pattern"><xsl:attribute name="pattern"><xsl:value-of select="@pattern" /></xsl:attribute></xsl:if>
-			<xsl:if test="@placeholder"><xsl:attribute name="placeholder"><xsl:value-of select="@placeholder" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="type"><xsl:choose>
+				<xsl:when test="@type"><xsl:value-of select="@type" /></xsl:when>
+				<xsl:otherwise>text</xsl:otherwise>
+			</xsl:choose></xsl:attribute>
+			<xsl:apply-templates select="@*" />
 		</input>
 
 		<div class="lr--form--error">
@@ -142,14 +169,16 @@ form.lr--form {
 </xsl:template>
 
 <xsl:template match="lr:form-submit">
-	<input type="submit" class="lr--button">
+	<input type="submit">
 		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:value-of select="concat('lr--form--submit ', @class)" /></xsl:attribute>
 	</input>
 </xsl:template>
 
 <xsl:template match="lr:accordion">
-	<div class="lr--accordion">
+	<div>
 		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:value-of select="concat('lr--accordion ', @class)" /></xsl:attribute>
 		<xsl:apply-templates />
 	</div>
 </xsl:template>
@@ -163,18 +192,40 @@ form.lr--form {
 </xsl:template>
 
 <xsl:template match="lr:accordion-open">
-	<div class="lr--accordion--open">
+	<div>
 		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:value-of select="concat('lr--accordion--open ', @class)" /></xsl:attribute>
 		<xsl:apply-templates />
 	</div>
 </xsl:template>
 
 <xsl:template match="lr:accordion-closed">
-	<div class="lr--accordion--closed">
+	<div>
 		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:value-of select="concat('lr--accordion--closed ', @class)" /></xsl:attribute>
 		<xsl:apply-templates />
 	</div>
 </xsl:template>
+
+<xsl:template match="lr:tooltip-wrapper">
+	<div>
+		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:value-of select="concat('lr--tooltip ', @class)" /></xsl:attribute>
+		<xsl:apply-templates />
+	</div>
+</xsl:template>
+
+<xsl:template match="lr:tooltip">
+	<div>
+		<xsl:apply-templates select="@*" />
+		<xsl:attribute name="class"><xsl:choose>
+			<xsl:when test="@position = 'over'"><xsl:value-of select="concat('lr--tooltip--content lr--tooltip--over ', @class)" /></xsl:when>
+			<xsl:otherwise><xsl:value-of select="concat('lr--tooltip--content lr--tooltip--under ', @class)" /></xsl:otherwise>
+		</xsl:choose></xsl:attribute>
+		<xsl:apply-templates />
+	</div>
+</xsl:template>
+
 
 <xsl:template match="html:*">
 	<xsl:copy>
@@ -189,4 +240,5 @@ form.lr--form {
 	</xsl:copy>
 </xsl:template>
 
-</xsl:stylesheet> 
+
+</xsl:stylesheet>
